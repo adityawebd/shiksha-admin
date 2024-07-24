@@ -214,14 +214,14 @@ export default function CollagesForm({
                     </div>
 
                     <div className="col-span-2 mb-4">
-                        <label className="block text-gray-700 font-semibold mb-2" htmlFor="shortAddress">Short Address</label>
+                        <label className="block text-gray-700 font-semibold mb-2 h-10" htmlFor="shortAddress">Short Address</label>
                         <input
                             type="text"
                             id="shortAddress"
                             name="shortAddress"
                             value={shortAddress}
                             onChange={ev => setShortAddress(ev.target.value)}
-                            className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300"
+                            className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300 "
                         />
                     </div>
 
@@ -236,7 +236,11 @@ export default function CollagesForm({
                         ></textarea>
                     </div>
 
-                    <div>
+                    <h1 className='col-span-3 h4'>Info Section</h1>
+
+
+                    {/* form submit button */}
+                    <div>   
                         <button
                             type="submit"
                             className="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 focus:outline-none focus:bg-blue-600"
