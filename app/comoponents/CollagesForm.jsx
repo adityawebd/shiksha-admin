@@ -63,7 +63,7 @@ export default function CollagesForm({
 
     async function handleSubmit(ev) {
         ev.preventDefault();
-        const data = { id, name,title, universitytype, Estd, collageIcon, rating, shortAddress, shortDiscription };
+        const data = { id, name, title, universitytype, Estd, collageIcon, rating, shortAddress, shortDiscription };
         try {
             if (_id) {
                 // Update
@@ -99,18 +99,18 @@ export default function CollagesForm({
     async function uploadImages(ev) {
         const files = ev.target?.files;
         if (files?.length > 0) {
-          setIsUploading(true);
-          const data = new FormData();
-          for (const file of files) {
-            data.append('file', file);
-          }
-          const res = await axios.post('/api/upload', data);
-          setcollageIcon(oldImages => {
-            return [...oldImages, ...res.data.links];
-          });
-          setIsUploading(false);
+            setIsUploading(true);
+            const data = new FormData();
+            for (const file of files) {
+                data.append('file', file);
+            }
+            const res = await axios.post('/api/upload', data);
+            setcollageIcon(oldImages => {
+                return [...oldImages, ...res.data.links];
+            });
+            setIsUploading(false);
         }
-      }
+    }
     function updatecollageIconOrder(collageIcon) {
         setcollageIcon(collageIcon);
     }
@@ -236,18 +236,8 @@ export default function CollagesForm({
                         ></textarea>
                     </div>
 
-                    <h1 className='col-span-3 h4'>Info Section</h1>
-
-
-                    {/* form submit button */}
-                    <div>   
-                        <button
-                            type="submit"
-                            className="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 focus:outline-none focus:bg-blue-600"
-                        >
-                            Submit
-                        </button>
-                    </div>
+                    <h1 className='col-span-3 h4'>Information Section</h1>
+                                       
                 </form>
             </div>
         </div>
