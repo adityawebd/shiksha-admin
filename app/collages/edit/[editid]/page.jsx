@@ -8,6 +8,7 @@ export default function EditCollagePage({ params, }) {
   const [CollageInfo, setCollageInfo] = useState([]);
   const [department, setDepartment] = useState([]);
   const [admission, setAdmission] = useState([]);
+  const[information, setInformation]=useState([]);
 
 
   const [Collage, setCollage] = useState({});
@@ -57,6 +58,21 @@ export default function EditCollagePage({ params, }) {
     }
   }, [CollageInfo]);
 
+  //information 
+  useEffect(() => {
+    if (CollageInfo.name) {
+      const fetchData = async () => {
+        const res = await fetch(`/api/information?college=${CollageInfo.name}`);
+        const result = await res.json();
+        if (result.success) {
+          setInformation(result.data);
+        }
+      };
+
+      fetchData();
+    }
+  }, [CollageInfo]);
+
   // Merge Data
   useEffect(() => {
     if (CollageInfo && department) {
@@ -64,12 +80,13 @@ export default function EditCollagePage({ params, }) {
         ...CollageInfo,
         department,
         admission,
+        information,
         
 
       };
       setCollage(combinedData);
     }
-  }, [CollageInfo, department,admission]);
+  }, [CollageInfo, department,admission,information]);
 
 
   console.log('mix data is ',Collage)
@@ -83,7 +100,7 @@ export default function EditCollagePage({ params, }) {
 
       <div className="flex overflow-hidden">
         <Sidebar />
-        <div className="w-full ml-36">
+        <div className="w-full ml-36 bg-slate-800">
           <p className='ml-36 p-10 h5'>Edit college info of <b> {Collage.name} </b> </p>
           {Collage && <CollagesForm {...Collage} />}
         </div>

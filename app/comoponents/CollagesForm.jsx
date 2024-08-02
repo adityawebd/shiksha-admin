@@ -8,6 +8,7 @@ import { FcDepartment } from "react-icons/fc";
 import { FaUniversity } from "react-icons/fa";
 import Spinner from "./Spinner";
 import { ReactSortable } from "react-sortablejs";
+import { IoInformationCircleSharp } from "react-icons/io5";
 export default function CollagesForm({
     _id,
     id: existingId,
@@ -21,6 +22,7 @@ export default function CollagesForm({
     shortDiscription: existingShortDiscription,
     department: existingDepartments,
     admission: existingAdmissions,
+    information: existingInformation,
 }) {
     const [id, setId] = useState("");
     const [name, setName] = useState("");
@@ -40,6 +42,10 @@ export default function CollagesForm({
     //Admission data
     const [admissions, setAdmissions] = useState([]);
 
+    //information data
+
+    const [information, setInformation] = useState([]);
+
     const handleCloseNotification = () => {
         setNotification(null);
     };
@@ -58,6 +64,7 @@ export default function CollagesForm({
         setShortDiscription(existingShortDiscription || "");
         setDepartments(existingDepartments || []);
         setAdmissions(existingAdmissions || []);
+        setInformation(existingInformation || []);
     }, [
         existingId,
         existingName,
@@ -70,6 +77,7 @@ export default function CollagesForm({
         existingShortDiscription,
         existingDepartments,
         existingAdmissions,
+        existingInformation,
     ]);
 
 
@@ -206,6 +214,8 @@ export default function CollagesForm({
     }
 
     //Admission  data
+    const [newCutoff, setNewCutoff] = useState({ title: '', para: '' });
+
     useEffect(() => {
         // Simulate data fetching
         const fetchData = async () => {
@@ -220,7 +230,7 @@ export default function CollagesForm({
         fetchData();
     }, []);
 
-    console.log("admmision data is 1", admissions);
+    // console.log("admmision data is 1", admissions);
 
     const addAdmission = () => {
         setAdmissions([
@@ -280,7 +290,7 @@ export default function CollagesForm({
         }
     }
 
-    console.log("admmision data is  2", admissions);
+    // console.log("admmision data is  2", admissions);
     function updatecollageIconOrder(collageIcon) {
         setcollageIcon(collageIcon);
     }
@@ -318,6 +328,18 @@ export default function CollagesForm({
         setAdmissions(updatedAdmissions);
     };
 
+    const addCutoff = (index, cutoff) => {
+        const updatedAdmissions = [...admissions];
+        updatedAdmissions[index].cutOffData.push({
+            // _id: new Date().toISOString(), // Unique ID generation
+            title: cutoff.title,
+            para: cutoff.para,
+            cutOffDataTable: []
+        });
+        setAdmissions(updatedAdmissions);
+        setNewCutoff({ title: '', para: '' }); // Reset form
+    };
+
     const addAdmissionCutoff = (admissionIndex, cutoffIndex) => {
         const updatedAdmissions = [...admissions];
         updatedAdmissions[admissionIndex].cutOffData[cutoffIndex].cutOffDataTable.push({
@@ -338,6 +360,148 @@ export default function CollagesForm({
     };
 
 
+    // information data
+
+    useEffect(() => {
+        // Simulate data fetching
+        const fetchData = async () => {
+            // Simulated data from an API
+            const res = await fetch(`/api/information?college=${name}`);
+            const result = await res.json();
+            if (result.success) {
+                setInformation(result.data);
+            }
+        };
+
+        fetchData();
+    }, []);
+
+    const updateInformationField = (index, field, value) => {
+        const newInformation = [...information];
+        newInformation[index][field] = value;
+        setInformation(newInformation);
+    };
+
+    const updateNotificationField = (itemIndex, notificationIndex, field, value) => {
+        const newInformation = [...information];
+        newInformation[itemIndex].notifications[notificationIndex][field] = value;
+        setInformation(newInformation);
+    };
+
+    const addNotification = (index) => {
+        const newInformation = [...information];
+        newInformation[index].notifications.push({ id: Date.now(), title: '', date: '' });
+        setInformation(newInformation);
+    };
+
+    const removeNotification = (itemIndex, notificationIndex) => {
+        const newInformation = [...information];
+        newInformation[itemIndex].notifications.splice(notificationIndex, 1);
+        setInformation(newInformation);
+    };
+
+    async function handleSubmitInformation(ev, index) {
+        ev.preventDefault();
+        const item = information[index];
+        const data = { ...item };
+        try {
+            if (item._id) {
+                // Update
+                await axios.put('/api/information', { ...data, _id: item._id });
+                setNotification({ message: 'Information updated successfully', status: 'success' });
+            } else {
+                // Create
+                await axios.post('/api/information', data);
+                setNotification({ message: 'Information added successfully', status: 'success' });
+            }
+        } catch (error) {
+            console.error('Error submitting form:', error);
+            setNotification({ message: 'Error submitting information', status: 'error' });
+        }
+    }
+
+    const updateMajorUpdateField = (itemIndex, updateIndex, field, value) => {
+        const newInformation = [...information];
+        newInformation[itemIndex].major_updates[updateIndex][field] = value;
+        setInformation(newInformation);
+    };
+
+    const addMajorUpdate = (index) => {
+        const newInformation = [...information];
+        newInformation[index].major_updates.push({ id: Date.now(), title: '', date: '' });
+        setInformation(newInformation);
+    };
+
+    const removeMajorUpdate = (itemIndex, updateIndex) => {
+        const newInformation = [...information];
+        newInformation[itemIndex].major_updates.splice(updateIndex, 1);
+        setInformation(newInformation);
+    };
+    const addAuthorPara = (index) => {
+        const newInformation = [...information];
+        newInformation[index].author_para.push({ id: Date.now(), text: '', date: '' });
+        setInformation(newInformation);
+    };
+
+    const removeAuthorPara = (itemIndex, paraIndex) => {
+        const newInformation = [...information];
+        newInformation[itemIndex].author_para.splice(paraIndex, 1);
+        setInformation(newInformation);
+    };
+
+
+    const updateAuthorParaField = (itemIndex, paraIndex, field, value) => {
+        const newInformation = [...information];
+        newInformation[itemIndex].author_para[paraIndex][field] = value;
+        setInformation(newInformation);
+    };
+
+
+    const updateCollegeHighlightField = (itemIndex, highlightIndex, field, value) => {
+        const newInformation = [...information];
+        newInformation[itemIndex].collegeHighlights[highlightIndex][field] = value;
+        setInformation(newInformation);
+    };
+    const addCollegeHighlight = (index) => {
+        const newInformation = [...information];
+        newInformation[index].collegeHighlights.push({ id: Date.now(), particular: '', highlights: '' });
+        setInformation(newInformation);
+    };
+
+    const removeCollegeHighlight = (itemIndex, highlightIndex) => {
+        const newInformation = [...information];
+        newInformation[itemIndex].collegeHighlights.splice(highlightIndex, 1);
+        setInformation(newInformation);
+    };
+
+    const addInformation = () => {
+        setInformation([
+            ...information,
+            {
+                _id: `unique-id-${information.length + 1}`,
+                id: '',
+                page_title: '',
+                college: '',
+                para_1: '',
+                author_name: '',
+                notifications: [{ id: 1, title: '', date: '' }],
+                major_updates: [{ id: 1, list_item: '' }],
+                author_para: [{ id: Date.now(), para: '' }],
+                collegeHighlights: [{ id: Date.now(), particular: '', highlights: '' }]
+            }
+        ]);
+    };
+
+    const removeInformation = (index, id) => {
+        setInformation(information.filter((_, i) => i !== index));
+    };
+
+
+
+
+
+
+
 
     return (
         <div className="w-full float-left ml-32">
@@ -350,7 +514,9 @@ export default function CollagesForm({
             )}
 
             <div className=" w-11/12">
-                <div className="bg-white rounded-lg shadow-lg p-4 my-5">
+
+                {/* College Information */}
+                <div className="bg-slate-500  rounded-lg shadow-lg p-4 my-5">
                     <form
                         onSubmit={handleSubmit}
                         className="w-11/12 p-10 bg-white rounded-lg grid grid-cols-3 gap-4 border-gray border-1 m-4"
@@ -537,7 +703,265 @@ export default function CollagesForm({
                         </button>
                     </form>
                 </div>
-                <div className="bg-white rounded-lg shadow-lg p-4 my-5">
+                {/* info data  */}
+                <div className="bg-slate-500 rounded-lg shadow-lg p-4 my-5">
+                <h1 className="text-center h1">Information </h1>
+                    {information.length > 0 ? (
+                        information.map((item, index) => (
+                            <form
+                                key={item._id}
+                                onSubmit={(ev) => handleSubmitInformation(ev, index)}
+                                className="p-4 bg-white rounded-lg grid grid-cols-3 gap-4 border-gray border-1 m-4"
+                            >
+                                
+                                <div className="mb-4">
+                                    <label className="block text-gray-700 font-semibold mb-2" htmlFor={`itemId-${index}`}>
+                                        ID
+                                    </label>
+                                    <input
+                                        type="text"
+                                        id={`itemId-${index}`}
+                                        name="id"
+                                        value={item.id || ''}
+                                        onChange={(ev) => updateInformationField(index, 'id', ev.target.value)}
+                                        className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300"
+                                    />
+                                </div>
+                                <div className="mb-4">
+                                    <label className="block text-gray-700 font-semibold mb-2" htmlFor={`itemPageTitle-${index}`}>
+                                        Page Title
+                                    </label>
+                                    <input
+                                        type="text"
+                                        id={`itemPageTitle-${index}`}
+                                        name="page_title"
+                                        value={item.page_title || ''}
+                                        onChange={(ev) => updateInformationField(index, 'page_title', ev.target.value)}
+                                        className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300"
+                                    />
+                                </div>
+                                <div className="mb-4">
+                                    <label className="block text-gray-700 font-semibold mb-2" htmlFor={`itemCollege-${index}`}>
+                                        College
+                                    </label>
+                                    <input
+                                        type="text"
+                                        id={`itemCollege-${index}`}
+                                        name="college"
+                                        value={item.college || ''}
+                                        onChange={(ev) => updateInformationField(index, 'college', ev.target.value)}
+                                        className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300"
+                                    />
+                                </div>
+
+                                <div className="mb-4 col-span-3">
+                                    <label className="block text-gray-700 font-semibold mb-2" htmlFor={`itemPara-${index}`}>
+                                        Paragraph Of College
+                                    </label>
+                                    <textarea
+                                        id={`itemPara-${index}`}
+                                        name="para_1"
+                                        value={item.para_1 || ''}
+                                        onChange={(ev) => updateInformationField(index, 'para_1', ev.target.value)}
+                                        className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300"
+                                        
+                                    />
+                                </div>
+                                <div className="mb-4 col-span-3">
+                                    <label className="block text-gray-700 font-semibold mb-2" htmlFor={`itemAuthorName-${index}`}>
+                                        Author Name
+                                    </label>
+                                    <input
+                                        type="text"
+                                        id={`itemAuthorName-${index}`}
+                                        name="author_name"
+                                        value={item.author_name || ''}
+                                        onChange={(ev) => updateInformationField(index, 'author_name', ev.target.value)}
+                                        className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300"
+                                    />
+                                </div>
+
+                                <div className="mb-4 col-span-3">
+                                    <h1 className="text-lg font-semibold text-center h1">Notifications</h1>
+                                    {item.notifications.map((notification, notifIndex) => (
+                                        <div key={notification.id} className="mb-4 flex" >
+                                            <label className=" text-gray-700 font-semibold mb-2" htmlFor={`notificationTitle-${index}-${notifIndex}`}>
+                                                Notification Title
+                                            </label>
+                                            <input
+                                                type="text"
+                                                id={`notificationTitle-${index}-${notifIndex}`}
+                                                name="title"
+                                                value={notification.title || ''}
+                                                onChange={(ev) => updateNotificationField(index, notifIndex, 'title', ev.target.value)}
+                                                className="w-full mx-4 px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300"
+                                            />
+                                            <label className=" text-gray-700 font-semibold mb-2 mt-2" htmlFor={`notificationDate-${index}-${notifIndex}`}>
+                                                Date
+                                            </label>
+                                            <input
+                                                type="date"
+                                                id={`notificationDate-${index}-${notifIndex}`}
+                                                name="date"
+                                                value={notification.date || ''}
+                                                onChange={(ev) => updateNotificationField(index, notifIndex, 'date', ev.target.value)}
+                                                className="mx-3 px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300"
+                                            />
+
+                                            <button
+                                                type="button"
+                                                onClick={() => removeNotification(index, notifIndex)}
+                                                className="bg-red-500 text-white px-2 py-1 rounded-lg mt-2"
+                                            >
+                                                Remove Notification
+                                            </button>
+                                        </div>
+                                    ))}
+                                    <button
+                                        type="button"
+                                        onClick={() => addNotification(index)}
+                                        className="bg-green-500 text-white px-4 py-2 rounded-lg mt-4"
+                                    >
+                                        Add New Notification
+                                    </button>
+                                </div>
+                                <div className="mb-4 col-span-3">
+                                    <h1 className="text-lg font-semibold h1 text-center">Major Updates</h1>
+                                    {item.major_updates.map((update, updateIndex) => (
+                                        <div key={update.id} className="mb-4">
+                                            <label className="block text-gray-700 font-semibold mb-2" htmlFor={`updateTitle-${index}-${updateIndex}`}>
+                                                Major Update Title
+                                            </label>
+                                            <input
+                                                type="text"
+                                                id={`updateTitle-${index}-${updateIndex}`}
+                                                name="title"
+                                                value={update.list_item || ''}
+                                                onChange={(ev) => updateMajorUpdateField(index, updateIndex, 'list_item', ev.target.value)}
+                                                className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300"
+                                            />
+
+
+                                            <button
+                                                type="button"
+                                                onClick={() => removeMajorUpdate(index, updateIndex)}
+                                                className="bg-red-500 text-white px-2 py-1 rounded-lg mt-2"
+                                            >
+                                                Remove Major Update
+                                            </button>
+                                        </div>
+                                    ))}
+                                    <button
+                                        type="button"
+                                        onClick={() => addMajorUpdate(index)}
+                                        className="bg-green-500 text-white px-4 py-2 rounded-lg mt-4"
+                                    >
+                                        Add New Major Update
+                                    </button>
+                                </div>
+
+                                <div className="mb-4 col-span-3">
+                                    <h1 className="text-lg font-semibold h1 text-center">Author Paragraphs</h1>
+                                    {item.author_para.map((para, paraIndex) => (
+                                        <div key={para.id} className="mb-4">
+                                            <label className="block text-gray-700 font-semibold mb-2" htmlFor={`authorParaText-${index}-${paraIndex}`}>
+                                                Paragraph
+                                            </label>
+                                            <textarea
+                                                id={`authorParaText-${index}-${paraIndex}`}
+                                                name="para"
+                                                value={para.para || ''}
+                                                onChange={(ev) => updateAuthorParaField(index, paraIndex, 'para', ev.target.value)}
+                                                className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300"
+                                                cols={20}
+                                                rows={5}
+                                            />
+                                           
+                                            <button
+                                                type="button"
+                                                onClick={() => removeAuthorPara(index, paraIndex)}
+                                                className="bg-red-500 text-white px-2 py-1 rounded-lg mt-2"
+                                            >
+                                                Remove Author Paragraph
+                                            </button>
+                                        </div>
+                                    ))}
+                                    <button
+                                        type="button"
+                                        onClick={() => addAuthorPara(index)}
+                                        className="bg-green-500 text-white px-4 py-2 rounded-lg mt-4"
+                                    >
+                                        Add New Author Paragraph
+                                    </button>
+                                </div>
+
+                                <div className="mb-4 col-span-3">
+                            <h1 className="text-lg font-semibold text-center p-5">College Highlights</h1>
+                            {item.collegeHighlights.map((highlight, highlightIndex) => (
+                                <div key={highlight.id} className="mb-4 flex gap-16 justify-center">
+                                    <label className="block text-gray-700 font-semibold mb-2" htmlFor={`collegeHighlightParticular-${index}-${highlightIndex}`}>
+                                        Particular
+                                    </label>
+                                    <input
+                                        type="text"
+                                        id={`collegeHighlightParticular-${index}-${highlightIndex}`}
+                                        name="particular"
+                                        value={highlight.particular || ''}
+                                        onChange={(ev) => updateCollegeHighlightField(index, highlightIndex, 'particular', ev.target.value)}
+                                        className=" px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300"
+                                    />
+                                    <label className="block text-gray-700 font-semibold mb-2 mt-2" htmlFor={`collegeHighlightHighlights-${index}-${highlightIndex}`}>
+                                        Highlights
+                                    </label>
+                                    <input
+                                        type="text"
+                                        id={`collegeHighlightHighlights-${index}-${highlightIndex}`}
+                                        name="highlights"
+                                        value={highlight.highlights || ''}
+                                        onChange={(ev) => updateCollegeHighlightField(index, highlightIndex, 'highlights', ev.target.value)}
+                                        className=" px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300"
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={() => removeCollegeHighlight(index, highlightIndex)}
+                                        className="bg-red-500 text-white px-2 py-1 rounded-lg mt-2"
+                                    >
+                                        Remove College Highlight
+                                    </button>
+                                </div>
+                            ))}
+                            <button
+                                type="button"
+                                onClick={() => addCollegeHighlight(index)}
+                                className="bg-green-500 text-white px-4 py-2 rounded-lg mt-4"
+                            >
+                                Add New College Highlight
+                            </button>
+                        </div>
+
+
+                                <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded-lg mt-4">
+                                    Save Information
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={() => removeInformation(index, item._id)}
+                                    className="bg-red-500 text-white px-4 py-2 rounded-lg mt-4"
+                                >
+                                    Remove Information
+                                </button>
+                            </form>
+                        ))
+                    ) : (
+                        <p>No information available.</p>
+                    )}
+                    <button onClick={addInformation} className="bg-green-500 text-white px-4 py-2 rounded-lg mt-4">
+                        Add New Information
+                    </button>
+                </div>
+
+                {/* Department Information */}
+                <div className="bg-slate-500  rounded-lg shadow-lg p-4 my-5">
                     <h1 className="col-span-3 h4">
                         <span className="flex mx-4">
                             Department Information <FcDepartment className="mx-4" />
@@ -724,9 +1148,10 @@ export default function CollagesForm({
                     </button>
                 </div>
 
-                <div className="bg-white rounded-lg shadow-lg p-4 my-5">
-                    <h1 className="col-span-3 h4">
-                        <span className="flex mx-4">
+                {/*Admission*/}
+                <div className="bg-slate-500 rounded-lg shadow-lg p-4 my-5">
+                    <h1 className="col-span-3 h4 ">
+                        <span className="flex mx-4 ">
                             Admission
                             <FaUniversity className="mx-4" />
                         </span>{" "}
@@ -931,6 +1356,37 @@ export default function CollagesForm({
                                 {/* Cutoff Data */}
                                 <div className="col-span-3">
                                     <h5 className="text-lg font-semibold mb-2">Cutoff Data</h5>
+
+
+                                    <div className="mb-4">
+                                        <label className="block text-gray-700 font-semibold mb-2">
+                                            Title
+                                        </label>
+                                        <input
+                                            type="text"
+                                            value={newCutoff.title}
+                                            onChange={(ev) => setNewCutoff({ ...newCutoff, title: ev.target.value })}
+                                            className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300"
+                                        />
+                                    </div>
+                                    <div className="mb-4">
+                                        <label className="block text-gray-700 font-semibold mb-2">
+                                            Description
+                                        </label>
+                                        <textarea
+                                            value={newCutoff.para}
+                                            onChange={(ev) => setNewCutoff({ ...newCutoff, para: ev.target.value })}
+                                            className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300"
+                                        />
+                                    </div>
+                                    <button
+                                        type="button"
+                                        onClick={() => addCutoff(index, newCutoff)}
+                                        className="bg-green-500 text-white px-4 py-2 rounded-lg mt-4"
+                                    >
+                                        Add Cutoff
+                                    </button>
+
                                     {admission.cutOffData.map((cutoff, cutoffIndex) => (
                                         <div key={cutoff._id} className="mb-4">
                                             <div className="mb-2">
@@ -1043,10 +1499,11 @@ export default function CollagesForm({
                                             >
                                                 Add Course
                                             </button>
+
                                         </div>
                                     ))}
-                                </div>
 
+                                </div>
                                 <button
                                     type="submit"
                                     className="bg-blue-500 text-white px-4 py-2 rounded-lg mt-4"
@@ -1074,6 +1531,12 @@ export default function CollagesForm({
                         Add New Admission
                     </button>
                 </div>
+
+
+
+
+
+
             </div>
         </div>
     );
