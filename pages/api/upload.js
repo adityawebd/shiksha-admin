@@ -32,7 +32,7 @@ export default async function handle(req, res) {
     const fileContents = fs.readFileSync(file.path);
     fs.writeFileSync(newPath, fileContents);
 
-    const link = `http://localhost:3000/uploads/${newFilename}`;
+    const link = `http://sikshahelpline.com:3001/uploads/${newFilename}`;
     links.push(link);
   }
 
