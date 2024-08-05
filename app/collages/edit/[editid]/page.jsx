@@ -101,7 +101,7 @@ export default function EditCollagePage({ params, }) {
       <div className="flex overflow-hidden">
         <Sidebar />
         <div className="w-full ml-36 bg-slate-800">
-          <p className='ml-36 p-10 h5'>Edit college info of <b> {Collage.name} </b> </p>
+          <p className='ml-36 p-10 h5 text-white h1 text-2xl'>Edit college info of <b> {Collage.name} </b> </p>
           {Collage && <CollagesForm {...Collage} />}
         </div>
       </div>

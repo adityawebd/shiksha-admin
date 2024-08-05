@@ -126,19 +126,19 @@ export default function CollagesForm({
         }
     }
 
-    useEffect(() => {
-        // Simulate data fetching
-        const fetchData = async () => {
-            // Simulated data from an API
-            const res = await fetch(`/api/department?college=${name}`);
-            const result = await res.json();
-            if (result.success) {
-                setDepartments(result.data);
-            }
-        };
+    // useEffect(() => {
+    //     // Simulate data fetching
+    //     const fetchData = async () => {
+    //         // Simulated data from an API
+    //         const res = await fetch(`/api/department?college=${name}`);
+    //         const result = await res.json();
+    //         if (result.success) {
+    //             setDepartments(result.data);
+    //         }
+    //     };
 
-        fetchData();
-    }, []);
+    //     fetchData();
+    // }, []);
 
 
 
@@ -216,19 +216,19 @@ export default function CollagesForm({
     //Admission  data
     const [newCutoff, setNewCutoff] = useState({ title: '', para: '' });
 
-    useEffect(() => {
-        // Simulate data fetching
-        const fetchData = async () => {
-            // Simulated data from an API
-            const res = await fetch(`/api/admission?college=${name}`);
-            const result = await res.json();
-            if (result.success) {
-                setAdmissions(result.data);
-            }
-        };
+    // useEffect(() => {
+    //     // Simulate data fetching
+    //     const fetchData = async () => {
+    //         // Simulated data from an API
+    //         const res = await fetch(`/api/admission?college=${name}`);
+    //         const result = await res.json();
+    //         if (result.success) {
+    //             setAdmissions(result.data);
+    //         }
+    //     };
 
-        fetchData();
-    }, []);
+    //     fetchData();
+    // }, []);
 
     // console.log("admmision data is 1", admissions);
 
@@ -362,19 +362,19 @@ export default function CollagesForm({
 
     // information data
 
-    useEffect(() => {
-        // Simulate data fetching
-        const fetchData = async () => {
-            // Simulated data from an API
-            const res = await fetch(`/api/information?college=${name}`);
-            const result = await res.json();
-            if (result.success) {
-                setInformation(result.data);
-            }
-        };
+    // useEffect(() => {
+    //     // Simulate data fetching
+    //     const fetchData = async () => {
+    //         // Simulated data from an API
+    //         const res = await fetch(`/api/information?college=${name}`);
+    //         const result = await res.json();
+    //         if (result.success) {
+    //             setInformation(result.data);
+    //         }
+    //     };
 
-        fetchData();
-    }, []);
+    //     fetchData();
+    // }, []);
 
     const updateInformationField = (index, field, value) => {
         const newInformation = [...information];
@@ -962,10 +962,10 @@ export default function CollagesForm({
 
                 {/* Department Information */}
                 <div className="bg-slate-500  rounded-lg shadow-lg p-4 my-5">
-                    <h1 className="col-span-3 h4">
-                        <span className="flex mx-4">
-                            Department Information <FcDepartment className="mx-4" />
-                        </span>{" "}
+                    <h1 className="col-span-3 text-center  h1">Department Information
+                        
+                             <FcDepartment className="mx-4" />
+                        
                     </h1>
                     {departments.length > 0 ? (
                         departments.map((department, index) => (
@@ -1150,10 +1150,11 @@ export default function CollagesForm({
 
                 {/*Admission*/}
                 <div className="bg-slate-500 rounded-lg shadow-lg p-4 my-5">
-                    <h1 className="col-span-3 h4 ">
+                    <h1 className="col-span-3 text-center justify-center  h1" >
+                    Admission
                         <span className="flex mx-4 ">
-                            Admission
-                            <FaUniversity className="mx-4" />
+                            
+                            <FaUniversity className="mx-4 text-white" />
                         </span>{" "}
                     </h1>
 
