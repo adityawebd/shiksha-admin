@@ -1,11 +1,16 @@
+
+import os from 'os';
 import multiparty from 'multiparty';
+import { Dropbox } from 'dropbox';
 import fs from 'fs';
 import path from 'path';
-import dbConnect from '../../lib/dbConnect';
+import { mongooseConnect } from "../../lib/mongoose";
 
+const dropboxClient = new Dropbox({ accessToken: process.env.DROPBOX_ACCESS_TOKEN });
+const tmpDir = os.tmpdir(); // Use the system's temporary directory
 
 export default async function handle(req, res) {
-  await dbConnect();
+  await mongooseConnect();
   // await isAdminRequest(req, res);
 
   const form = new multiparty.Form();
@@ -17,23 +22,38 @@ export default async function handle(req, res) {
   });
 
   console.log('length:', files.file.length);
+
   const links = [];
-  
-  // Ensure the uploads directory exists
-  const uploadDir = path.join(process.cwd(), 'public', 'uploads');
-  if (!fs.existsSync(uploadDir)) {
-    fs.mkdirSync(uploadDir, { recursive: true });
-  }
-
   for (const file of files.file) {
-    const ext = file.originalFilename.split('.').pop();
-    const newFilename = Date.now() + '.' + ext;
-    const newPath = path.join(uploadDir, newFilename);
-    const fileContents = fs.readFileSync(file.path);
-    fs.writeFileSync(newPath, fileContents);
+    const ext = path.extname(file.originalFilename);
+    const newFilename = Date.now() + ext;
+    const tempFilePath = path.join(tmpDir, newFilename); // Use the system's temporary directory
 
-    const link = `http://sikshahelpline.com:3001/uploads/${newFilename}`;
-    links.push(link);
+    // Move file to a temporary directory
+    fs.renameSync(file.path, tempFilePath);
+
+    // Upload to Dropbox
+    try {
+      const fileContent = fs.readFileSync(tempFilePath);
+      const response = await dropboxClient.filesUpload({
+        path: `/uploads/${newFilename}`,
+        contents: fileContent,
+        mode: { '.tag': 'add' }, // 'add' to create a new file or overwrite existing
+      });
+
+      // Get the shared link
+      const sharedLinkResponse = await dropboxClient.sharingCreateSharedLinkWithSettings({
+        path: response.result.path_display,
+      });
+
+      links.push(sharedLinkResponse.result.url.replace('dl=0', 'dl=1')); // Use 'dl=1' for direct download
+    } catch (error) {
+      console.error('Dropbox upload error:', error);
+      return res.status(500).json({ error: 'Failed to upload file to Dropbox' });
+    } finally {
+      // Clean up the temporary file
+      fs.unlinkSync(tempFilePath);
+    }
   }
 
   return res.json({ links });

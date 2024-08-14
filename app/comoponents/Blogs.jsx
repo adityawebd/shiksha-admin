@@ -1,61 +1,129 @@
-import React from 'react'
+'use client'
+import React, { useState, useEffect } from "react";
+import Link from "next/link";
+import { EditIcon } from "lucide-react";
+import { MdDelete } from "react-icons/md";
+import { DateRangePicker } from 'react-date-range';
+import 'react-date-range/dist/styles.css'; // import the styles
+import 'react-date-range/dist/theme/default.css'; // import the theme
+
+export default function Blog() {
+    const [blogs, setBlogs] = useState([]);
+    const [filteredBlogs, setFilteredBlogs] = useState([]);
+    const [search, setSearch] = useState("");
+    const [rowsPerPage, setRowsPerPage] = useState(10);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [dateRange, setDateRange] = useState({
+        startDate: new Date('2024-01-01'),
+        endDate: new Date(),
+        key: 'selection'
+    });
+
+    useEffect(() => {
+        // Simulate data fetching
+        const fetchData = async () => {
+            // Simulated data from an API
+            const res = await fetch(`/api/blogs`);
+            const result = await res.json();
+            if (result.success) {
+                setBlogs(result.data);
+                setFilteredBlogs(result.data);
+            }
+        };
+
+        fetchData();
+    }, []);
+
+    useEffect(() => {
+        // Filter blogs based on search term and date range
+        const filtered = blogs
+            .filter(blog => blog.title.toLowerCase().includes(search.toLowerCase()))
+            .filter(blog => {
+                const blogDate = new Date(formatDate(blog.createdAt)); // Assuming `date` is a field in your blog data
+                return blogDate >= dateRange.startDate && blogDate <= dateRange.endDate;
+            });
+        setFilteredBlogs(filtered);
+    }, [search, dateRange, blogs]);
 
 
-const Blogs = () => {
-    const blog = [
-        {
-            id: '01',
-            author: 'John Doe',
-            title: 'Front-end Developer',
-            cardImg:
-                'https://images.unsplash.com/photo-1628157588553-5eeea00af15c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1160&q=80',
-        },
-        {
-            id: '02',
-            author: 'Jane Doe',
-            title: 'Back-end Developer',
-            cardImg:
-                'https://images.unsplash.com/photo-1639149888905-fb39731f2e6c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=928&q=80',
-        },
-    ]
+    const truncateTitle = (title) => {
+        if (title.length > 20) {
+          return title.substring(0, 20) + '...';
+        }
+        return title;
+      };
+
+    const handleSearchChange = (e) => {
+        setSearch(e.target.value);
+    };
+
+    const handleRowsPerPageChange = (e) => {
+        setRowsPerPage(Number(e.target.value));
+        setCurrentPage(1); // Reset to first page when rows per page changes
+    };
+
+    const handlePageChange = (newPage) => {
+        setCurrentPage(newPage);
+    };
+
+    const handleShowAll = () => {
+        setDateRange({
+            startDate: new Date('2024-01-01'),
+            endDate: new Date(),
+            key: 'selection'
+        });
+        setSearch('');
+    };
+
+    const pageCount = Math.ceil(filteredBlogs.length / rowsPerPage);
+    const displayedBlogs = filteredBlogs.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage);
+
+    function formatDate(dateString) {
+        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        const date = new Date(dateString);
+        return date.toLocaleDateString('en-US', options);
+    }
+
     return (
-       
-            <section className="w-11/12 float-right p-5">
-                <div className="flex flex-col space-y-4 md:flex-row md:items-center md:justify-between md:space-y-0">
-                    <div>
-                        <h2 className="text-lg font-semibold">Blogs</h2>
-                        <p className="mt-1 text-sm text-gray-700">
-                            This is a list of all Blogs. You can add new Blogs, edit or delete existing
-                            ones.
-                        </p>
-                    </div>
-                    <div>
-                        <button
-                            type="button"
-                            className="rounded-md bg-black px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-black/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
-                        >
-                            <a href='/newblog'> Add new Blog </a>
-                        </button>
-                    </div>
+        <>
+            <div className="flex flex-col space-y-4 md:flex-row md:items-center md:justify-between md:space-y-0 w-auto mt-10">
+                <div>
+                    <h2 className=" font-semibold text-3xl">Blog</h2>
+                    <p className="mt-1 text-sm text-gray-700">
+                        This is a list of all Blog. You can add new Blog, edit or delete existing ones.
+                    </p>
                 </div>
-                <div className="mt-6 flex flex-col">
-                    <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-                        <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
-                            <div className="overflow-hidden border border-gray-200 md:rounded-lg">
-                                <table className="min-w-full divide-y divide-gray-200">
+                <div className="flex gap-4">
+                    <Link className="rounded-md bg-black px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-black/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black w-60" href={'/blogs/new'}>Add new Blog</Link>
+                    <input
+                        type="text"
+                        value={search}
+                        onChange={handleSearchChange}
+                        placeholder="Search by title"
+                        className="rounded-md border border-gray-300 px-3 py-2 text-sm"
+                    />
+                    <button
+                        onClick={handleShowAll}
+                        className="rounded-md bg-blue-500 px-3 py-2 text-sm text-white hover:bg-blue-600"
+                    >
+                        Show All
+                    </button>
+                </div>
+            </div>
+
+            <section className="px-4 py-4">
+                <div className="mt-6 p-4 overflow-x-auto">
+                    <div className="-mx-4 sm:-mx-6 lg:-mx-8">
+                        <div className="inline-block min-w-full py-2 align-middle">
+                            <div className="p-4 m-4 w-11/12 flex justify-center border border-gray-200 md:rounded-lg">
+                                <table className="w-11/12 divide-y divide-gray-200 table-fixed max-md:table-auto">
                                     <thead className="bg-gray-50">
                                         <tr className="divide-x divide-gray-200">
                                             <th
                                                 scope="col"
                                                 className="px-4 py-3.5 text-left text-sm font-normal text-gray-500"
                                             >
-                                                <span>ID</span>
-                                            </th>
-                                            <th
-                                                scope="col"
-                                                className="px-4 py-3.5 text-left text-sm font-normal text-gray-500"
-                                            >
-                                                <span>Card Image</span>
+                                                <span>Card / Background image</span>
                                             </th>
                                             <th
                                                 scope="col"
@@ -63,94 +131,122 @@ const Blogs = () => {
                                             >
                                                 Title
                                             </th>
-
                                             <th
                                                 scope="col"
                                                 className="px-4 py-3.5 text-left text-sm font-normal text-gray-500"
                                             >
                                                 Author
                                             </th>
-
-                                            {/* <th
-                                                        scope="col"
-                                                        className="px-4 py-3.5 text-left text-sm font-normal text-gray-500"
-                                                    >
-                                                        
-                                                    </th> */}
+                                            <th
+                                                scope="col"
+                                                className="px-4 py-3.5 text-left text-sm font-normal text-gray-500"
+                                            >
+                                                View
+                                            </th>
                                             <th scope="col" className="px-4 py-3.5 text-left text-sm font-normal text-gray-500">
-                                                <span >Action</span>
+                                                Action
                                             </th>
                                         </tr>
                                     </thead>
                                     <tbody className="divide-y divide-gray-200 bg-white">
-                                        {blog.map((blogs) => (
-                                            <tr key={blogs.id} className="divide-x divide-gray-200">
-                                                <td className='px-6'>
-                                                    <span className="inline-flex rounded-full bg-blue-100 px-2 text-xs font-semibold leading-5 text-blue-800">
-                                                        {blogs.id}
-                                                    </span>
-                                                </td>
-                                                <td className="whitespace-nowrap px-4 py-4">
-                                                    <div className="flex">
-                                                        <div className="h-10 w-10 flex-shrink-0">
-                                                            <img
-                                                                className="h-10 w-10 rounded-full object-cover"
-                                                                src={blogs.cardImg}
-                                                                alt=""
-                                                            />
-                                                        </div>
-
-                                                    </div>
-                                                </td>
-                                                <td className="whitespace-nowrap px-4 py-4">
-                                                    <div className="text-sm text-gray-900">{blogs.title}</div>
-
-                                                </td>
-                                                <td className="whitespace-nowrap px-4 py-4">
-                                                    <span className="inline-flex rounded-full bg-green-100 px-2 text-xs font-semibold leading-5 text-green-800">
-                                                        {blogs.author}
-                                                    </span>
-                                                </td>
-
-                                                <td className="whitespace-nowrap px-4 py-4 text-right text-sm font-medium ">
-                                                    <a href="#" className="text-gray-500 hover:text-indigo-600 float-left">
-                                                        Edit
-                                                    </a>
-
-                                                    <a href="#" className=" text-red-600 hover:text-red-900 float-right">
-                                                        Delete
-                                                    </a>
+                                        {displayedBlogs.length === 0 ? (
+                                            <tr>
+                                                <td colSpan="5" className="whitespace-nowrap px-4 py-4 text-center text-sm text-gray-500">
+                                                    No data available
                                                 </td>
                                             </tr>
-                                        ))}
+                                        ) : (
+                                            displayedBlogs.map((blog) => (
+                                                <tr key={blog.title} className="divide-x divide-gray-200">
+                                                    <td className="whitespace-nowrap px-4 py-4">
+                                                        <div className="flex items-center">
+                                                            <div className="h-10 w-10 flex-shrink-0">
+                                                                <img
+                                                                    className="h-10 w-10 rounded-full object-cover"
+                                                                    src={blog.cardImage}
+                                                                    alt=""
+                                                                />
+                                                            </div>
+                                                            
+                                                        </div>
+                                                    </td>
+                                                    <td className="whitespace-nowrap px-12 py-4">
+                                                        <div className="text-sm text-gray-900">
+                                                            {blog.title.length > 15 ? blog.title.slice(0, 15) + '...' : blog.title}
+                                                        </div>
+                                                    </td>
+                                                    <td className="whitespace-nowrap px-12 py-4">
+                                                        Admin
+                                                    </td>
+                                                    <td className="whitespace-nowrap px-4 py-4 text-sm text-gray-500">
+                                                        <div className="text-sm text-gray-900">
+                                                            <Link href={'/blogs/view/' + blog.title}>{truncateTitle(blog.title)}</Link>
+                                                        </div>
+                                                    </td>
+                                                    <td className="whitespace-nowrap px-4 py-4 text-right text-sm font-medium flex justify-evenly">
+                                                        <Link href={'/blogs/edit/' + blog.title} className="text-gray-500 text-indigo-700 hover:text-indigo-300 flex justify-evenly">
+                                                            <EditIcon className="mr-2" />
+                                                            Edit
+                                                        </Link>
+                                                        <Link href={'/blogs/delete/' + blog.title} className="text-gray-500 text-red-700 hover:text-red-300 flex">
+                                                            <MdDelete size={20} className="mr-2" />
+                                                            Delete
+                                                        </Link>
+                                                    </td>
+                                                </tr>
+                                            ))
+                                        )}
                                     </tbody>
                                 </table>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div className="mt-4 w-full border-gray-300">
-                    <div className="mt-2 flex items-center justify-end">
-                        <div className="space-x-2">
-                            <button
-                                type="button"
-                                className="rounded-md bg-black px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-black/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
-                            >
-                                &larr; Previous
-                            </button>
-                            <button
-                                type="button"
-                                className="rounded-md bg-black px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-black/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
-                            >
-                                Next &rarr;
-                            </button>
-                        </div>
+
+                <div className="flex justify-between items-center mt-4">
+                    <div className="flex items-center">
+                        <label htmlFor="rowsPerPage" className="mr-2 w-52">Rows per page:</label>
+                        <select
+                            id="rowsPerPage"
+                            value={rowsPerPage}
+                            onChange={handleRowsPerPageChange}
+                            className="rounded-md border border-gray-300 px-3 py-2 text-sm"
+                        >
+                            <option value={10}>10</option>
+                            <option value={20}>20</option>
+                            <option value={50}>50</option>
+                            <option value={100}>100</option>
+                        </select>
+                    </div>
+                    <div>
+                        <button
+                            onClick={() => handlePageChange(currentPage - 1)}
+                            disabled={currentPage === 1}
+                            className="rounded-md bg-gray-300 px-3 py-2 text-sm"
+                        >
+                            Previous
+                        </button>
+                        <span className="mx-2">{currentPage} / {pageCount}</span>
+                        <button
+                            onClick={() => handlePageChange(currentPage + 1)}
+                            disabled={currentPage === pageCount}
+                            className="rounded-md bg-gray-300 px-3 py-2 text-sm"
+                        >
+                            Next
+                        </button>
                     </div>
                 </div>
+
+                <div className="mt-4">
+                    <DateRangePicker
+                        ranges={[dateRange]}
+                        onChange={(item) => setDateRange(item.selection)}
+                        months={1}
+                        direction="horizontal" 
+                        className="rounded-md border border-gray-300 px-3 py-2 text-sm float float-end w-full gap-96"
+                    />
+                </div>
             </section>
-
-       
-    )
+        </>
+    );
 }
-
-export default Blogs

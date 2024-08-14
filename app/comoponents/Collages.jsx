@@ -240,6 +240,7 @@ const Collages = () => {
                         </button>
                     </div>
                 </div>
+                
             </div>
 
         </div>

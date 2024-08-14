@@ -18,7 +18,7 @@ const page = () => {
 
             <div className="flex overflow-hidden">
                 <Sidebar />
-                <div className=" w-11/12 ml-36">
+                <div className=" w-10/12 ml-72">
                     <Blogs />
                 </div>
 
