@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-export default function page({params}) {
+export default function Page({params}) {
 //   const router = useRouter();
   const [productInfo, setProductInfo] = useState();
   const titlee = decodeURIComponent(params.delete);

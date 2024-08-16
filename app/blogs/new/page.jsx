@@ -11,7 +11,7 @@ import "react-quill/dist/quill.snow.css";
 
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 
-export default function page() {
+export default function Page() {
   const [images, setImages] = useState([]);
   const [isUploading, setIsUploading] = useState(false);
   const [title, setTitle] = useState("");
