@@ -13,6 +13,7 @@
     "@types/react-date-range": "^1.4.9",
     "axios": "^1.7.2",
     "bootstrap": "^5.3.3",
+    "dropbox": "^10.34.0",
     "lucide-react": "^0.399.0",
     "mongoose": "^8.4.4",
     "multiparty": "^4.2.3",

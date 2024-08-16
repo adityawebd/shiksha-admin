@@ -9,7 +9,7 @@ import "react-quill/dist/quill.snow.css";
 import dynamic from 'next/dynamic';
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 
-export default function page({ params }) {
+export default function Page({ params }) {
     
 
     const quillModules = {

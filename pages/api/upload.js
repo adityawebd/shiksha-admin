@@ -4,13 +4,13 @@ import multiparty from 'multiparty';
 import { Dropbox } from 'dropbox';
 import fs from 'fs';
 import path from 'path';
-import { mongooseConnect } from "../../lib/mongoose";
+import dbConnect from '../../lib/dbConnect';
 
 const dropboxClient = new Dropbox({ accessToken: process.env.DROPBOX_ACCESS_TOKEN });
 const tmpDir = os.tmpdir(); // Use the system's temporary directory
 
 export default async function handle(req, res) {
-  await mongooseConnect();
+  await dbConnect();
   // await isAdminRequest(req, res);
 
   const form = new multiparty.Form();
