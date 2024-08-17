@@ -184,6 +184,8 @@ export default function Page() {
                 <input type="file" onChange={uploadImages} className="hidden" />
               </label>
             </div>
+
+            
             <div className="mt-4">
               <label> Title</label>
               <input

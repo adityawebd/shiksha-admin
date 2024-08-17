@@ -5,6 +5,7 @@ import { EditIcon } from "lucide-react";
 import { MdDelete } from "react-icons/md";
 import { DateRangePicker } from 'react-date-range';
 import 'react-date-range/dist/styles.css'; // import the styles
+import 'react-date-range/dist/theme/default.css';// import the styles
 
 const Notif = () => {
     const [Notifications, setNotifications] = useState([]);
@@ -22,7 +23,7 @@ const Notif = () => {
         // Simulate data fetching
         const fetchData = async () => {
             // Simulated data from an API
-            const res = await fetch(`/api/Notifications`);
+            const res = await fetch(`/api/notification`);
             const result = await res.json();
             if (result.success) {
                 setNotifications(result.data);
@@ -93,7 +94,7 @@ const Notif = () => {
                     </p>
                 </div>
                 <div className="flex gap-4">
-                    <Link className="rounded-md bg-black px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-black/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black w-60" href={'/Notifications/new'}>Add new Notification</Link>
+                    <Link className="rounded-md bg-black px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-black/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black w-60" href={'/notification/new'}>Add new Notification</Link>
                     <input
                         type="text"
                         value={search}
@@ -140,7 +141,7 @@ const Notif = () => {
                                                 scope="col"
                                                 className="px-4 py-3.5 text-left text-sm font-normal text-gray-500"
                                             >
-                                                View
+                                                Date
                                             </th>
                                             <th scope="col" className="px-4 py-3.5 text-left text-sm font-normal text-gray-500">
                                                 Action
@@ -162,7 +163,7 @@ const Notif = () => {
                                                             <div className="h-10 w-10 flex-shrink-0">
                                                                 <img
                                                                     className="h-10 w-10 rounded-full object-cover"
-                                                                    src={Notification.cardImage}
+                                                                    src={Notification.images}
                                                                     alt=""
                                                                 />
                                                             </div>
@@ -179,15 +180,15 @@ const Notif = () => {
                                                     </td>
                                                     <td className="whitespace-nowrap px-4 py-4 text-sm text-gray-500">
                                                         <div className="text-sm text-gray-900">
-                                                            <Link href={'/Notifications/view/' + Notification.title}>{truncateTitle(Notification.title)}</Link>
+                                                            <span>{formatDate(Notification?.createdAt)}</span>
                                                         </div>
                                                     </td>
                                                     <td className="whitespace-nowrap px-4 py-4 text-right text-sm font-medium flex justify-evenly">
-                                                        <Link href={'/Notifications/edit/' + Notification.title} className="text-gray-500 text-indigo-700 hover:text-indigo-300 flex justify-evenly">
+                                                        <Link href={'/notification/edit/' + Notification.title} className="text-gray-500 text-indigo-700 hover:text-indigo-300 flex justify-evenly">
                                                             <EditIcon className="mr-2" />
                                                             Edit
                                                         </Link>
-                                                        <Link href={'/Notifications/delete/' + Notification.title} className="text-gray-500 text-red-700 hover:text-red-300 flex">
+                                                        <Link href={'/notification/delete/' + Notification.title} className="text-gray-500 text-red-700 hover:text-red-300 flex">
                                                             <MdDelete size={20} className="mr-2" />
                                                             Delete
                                                         </Link>
