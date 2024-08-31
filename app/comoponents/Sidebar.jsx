@@ -1,5 +1,5 @@
 import React from 'react'
-import { BarChart,GraduationCap, Wallet, Newspaper, BellRing, Paperclip, Brush, Wrench, LogOut } from 'lucide-react'
+import { BarChart,GraduationCap, Wallet, Newspaper, BellRing, Paperclip, Brush, Wrench, LogOut, Contact2 } from 'lucide-react'
 import Image from 'next/image'
 
 const Sidebar = () => {
@@ -60,10 +60,10 @@ const Sidebar = () => {
             <label className="px-3 text-xs font-semibold uppercase text-white">Customization</label>
             <a
               className="flex transform items-center rounded-lg px-3 py-2 text-gray-200 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700"
-              href="#"
+              href="leads"
             >
-              <Brush className="h-5 w-5" aria-hidden="true" />
-              <span className="mx-2 text-sm font-medium">Themes</span>
+              <Contact2 className="h-5 w-5" aria-hidden="true" />
+              <span className="mx-2 text-sm font-medium">Contact / Lead's</span>
             </a>
             <a
               className="flex transform items-center rounded-lg px-3 py-2 text-gray-200 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700"
