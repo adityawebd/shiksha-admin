@@ -171,16 +171,25 @@ export default function NotificationForm({ existingData }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle form submission logic here
+  
     try {
-      await axios.post("/api/notification", notification); // Replace with your API URL
-      alert("Notification sent successfully!");
+      if (existingData._id) {
+        // If `notification.id` exists, we are updating an existing notification
+        await axios.put(`/api/notification/${notification.title}`, notification); // Replace with your API URL
+        alert("Notification updated successfully!");
+      } else {
+        // If `notification.id` does not exist, we are creating a new notification
+        await axios.post("/api/notification", notification); // Replace with your API URL
+        alert("Notification sent successfully!");
+      }
     } catch (error) {
       console.error("Error sending notification:", error);
       alert("Failed to send notification");
     }
+    
     console.log(notification);
   };
+  
 
   return (
     <form onSubmit={handleSubmit} className="p-4 space-y-4">
