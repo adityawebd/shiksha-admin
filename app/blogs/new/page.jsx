@@ -15,11 +15,16 @@ export default function Page() {
   const [images, setImages] = useState([]);
   const [isUploading, setIsUploading] = useState(false);
   const [title, setTitle] = useState("");
+  const [meta, setMeta] = useState("");
+  const [url, setUrl] = useState("");
+  const [author, setAuthor] = useState("Admin");
+
   const [content, setContent] = useState("");
 
   function updateImagesOrder(images) {
     setImages(images);
   }
+
   async function uploadImages(ev) {
     const files = ev.target?.files;
     if (files?.length > 0) {
@@ -63,6 +68,9 @@ export default function Page() {
     const formData = new FormData();
     formData.append("title", title);
     formData.append("content", content);
+    formData.append("meta", meta);
+    formData.append("url", url);
+    formData.append("author", author);
     if (images) {
       images.forEach((image, index) => {
         formData.append(`cardImage`, image); // Append each image file separately
@@ -132,6 +140,28 @@ export default function Page() {
       <div className="flex">
         <Sidebar />
         <div className=" w-10/12 ml-72 m-10 p-10">
+          <div className="mt-4">
+            <label>Meta tags</label>
+            <textarea
+              placeholder="Enter meta tags with html code"
+              value={meta}
+              onChange={(e) => setMeta(e.target.value)}
+              className="border border-gray-200 p-4 rounded-md shadow-sm w-full"
+              rows="2"
+            ></textarea>
+          </div>
+
+          <div className="mt-4">
+            <label> Your URL </label>
+            <input
+              placeholder="Enter your custom url"
+              type="text"
+              value={url}
+              onChange={(e) => setUrl(e.target.value)}
+              className="border border-gray-200 p-4 rounded-md shadow-sm w-full h-10"
+            />
+          </div>
+
           <div className="flex justify-center w-full">
             <h1 className="text-3xl font-bold ">New Blog</h1>
           </div>
@@ -185,7 +215,6 @@ export default function Page() {
               </label>
             </div>
 
-            
             <div className="mt-4">
               <label> Title</label>
               <input

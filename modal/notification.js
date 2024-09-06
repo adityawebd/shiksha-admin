@@ -1,157 +1,55 @@
 import mongoose from 'mongoose';
 
+// Table subdocument schema
+const tableSchema = new mongoose.Schema({
+  tableHeading: String,
+  tableRow: [
+    {
+      id: Number,
+      row: [
+        {
+          id: Number,
+          colData: String
+        }
+      ]
+    }
+  ],
+  tableCol: [
+    {
+      id: Number,
+      col: String
+    }
+  ],
+  tableFooter: String
+});
+
+// Notification schema
 const notificationSchema = new mongoose.Schema({
-    type: {
-        type: String,
-        enum: ['normal', 'live'], // Adjust enums based on types you expect
-         
-    },
-    images: {
-        type: String,
-         
-    },
-    title: {
-        type: String,
-         
-    },
-    message: {
-        type: String,
-         
-    },
-    date: {
-        type: Date,
-         
-    },
-    notificationData: {
-        type: String,
-         
-    },
-    importantDate: {
-        heading: {
-            type: String,
-             
-        },
-        table_data: [
-            {
-                event_name: {
-                    type: String,
-                     
-                },
-                date: {
-                    type: String,
-                     
-                },
-            },
-        ],
-    },
-    applicationFee: {
-        heading: {
-            type: String,
-             
-        },
-        table_data: [
-            {
-                category: {
-                    type: String,
-                     
-                },
-                fee: {
-                    type: String,
-                     
-                },
-            },
-        ],
-        note: {
-            type: String,
-             
-        },
-    },
-    vacancyDetails: {
-        heading: {
-            type: String,
-             
-        },
-        table_data: [
-            {
-                postName: {
-                    type: String,
-                     
-                },
-                totalPosts: {
-                    type: String,
-                     
-                },
-            },
-        ],
-    },
-    eligibilityCriteria: {
-        heading: {
-            type: String,
-             
-        },
-        listItems: [
-            {
-                item: {
-                    type: String,
-                    default: '',
-                },
-            },
-        ],
-        table_data: [
-            {
-                name: {
-                    type: String,
-                     
-                },
-                type: {
-                    type: String,
-                     
-                },
-                posts: {
-                    type: String,
-                     
-                },
-            },
-        ],
-    },
-    howToApply: {
-        heading: {
-            type: String,
-             
-        },
-        listItems: [
-            {
-                item: {
-                    type: String,
-                    default: '',
-                },
-            },
-        ],
-    },
-    usefulLinks: {
-        heading: {
-            type: String,
-             
-        },
-        table_data: [
-            {
-                linkDesc: {
-                    type: String,
-                     
-                },
-                url: {
-                    type: String,
-                     
-                },
-            },
-        ],
-    },
-    notiFooterData: {
-        type: String,
-         
-    },
+  type: {
+    type: String,
+    enum: ['normal', 'live'], // Adjust enums based on types you expect
+  },
+  image: {
+    type: String,
+  },
+  title: {
+    type: String,
+  },
+  message: {
+    type: String,
+  },
+  date: {
+    type: Date,
+  },
+  notificationData: {
+    type: String,
+  },
+  table: {
+    type: [tableSchema],
+    required: true // Ensure table is always provided
+  }
 }, {
-    timestamps: true, // Adds createdAt and updatedAt timestamps
+  timestamps: true, // Adds createdAt and updatedAt timestamps
 });
 
 const Notification = mongoose.models.notifications || mongoose.model('notifications', notificationSchema);

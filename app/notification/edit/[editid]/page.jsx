@@ -27,9 +27,9 @@ export default function Editnotification({params})
   return(
     <div className="flex overflow-hidden">
         <Sidebar />
-        <div className="w-10/12 ml-36 ">
-          <p className='ml-36 p-10 h5 text-white h1 text-2xl'>Edit notification&apos;s information of <b> {notificationDetails.title} </b> </p>
-          {notificationDetails && <Notificationform  notification={notificationDetails} />}
+        <div className="w-10/12 ml-64 ">
+          <p className='ml-36 p-10 h5  h1 text-2xl'>Edit notification&apos;s information of <b> {notificationDetails.title} </b> </p>
+          {notificationDetails && <Notificationform  existingData={notificationDetails} />}
         </div>
       </div>
 

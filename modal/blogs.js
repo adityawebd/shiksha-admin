@@ -4,9 +4,28 @@ const BlogSchema = new mongoose.Schema({
     title: {
         type: String,
         required: true,
-        unique: true
+        unique: true,
+        trim:true
     },
+    url: {
+        type: String,
+        required: true,
+        unique: true,
+        trim:true
+    },
+
+    author: {
+        type: String,
+        required: true,
+        unique: true,
+        trim:true
+    },
+
     content: {
+        type: String,
+        required: true
+    },
+    meta: {
         type: String,
         required: true
     },
@@ -14,6 +33,7 @@ const BlogSchema = new mongoose.Schema({
         type: Date,
         default: Date.now
     },
+    
     cardImage: {
         type: String
     },
