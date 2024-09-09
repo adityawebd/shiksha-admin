@@ -175,7 +175,7 @@ export default function NotificationForm({ existingData }) {
     try {
       if (existingData._id) {
         // If `notification.id` exists, we are updating an existing notification
-        await axios.put(`/api/notification/${notification.title}`, notification); // Replace with your API URL
+        await axios.put(`/api/notification/`, notification); // Replace with your API URL
         alert("Notification updated successfully!");
       } else {
         // If `notification.id` does not exist, we are creating a new notification
@@ -270,12 +270,12 @@ export default function NotificationForm({ existingData }) {
       </div>
 
       {/* Table Management */}
-      {notification.table.map((table) => (
+      {notification.table.map((table ,index) => (
         <div
           key={table.id}
           className="mt-6 p-4 border border-gray-300 rounded-md"
         >
-          <h2 className="text-lg font-semibold">Table {table.id}</h2>
+          <h2 className="text-lg font-semibold">Table {index +1} {table.id}</h2>
           <button
             type="button"
             onClick={() => handleRemoveTable(table.id)}
