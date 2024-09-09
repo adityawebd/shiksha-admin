@@ -7,7 +7,6 @@ import { useParams, useNavigate } from "react-router-dom";
 import Image from "next/image";
 import "react-quill/dist/quill.snow.css";
 import dynamic from "next/dynamic";
-import { useRouter } from 'next/router';
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 
 export default function EditBlog() {
@@ -83,7 +82,7 @@ export default function EditBlog() {
 
   const handleSubmit = async (event) => {
     // event.preventDefault();
-    const router = useRouter();
+    
     const blogData = {
       title,
       content,
