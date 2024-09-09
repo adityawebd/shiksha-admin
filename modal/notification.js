@@ -44,6 +44,10 @@ const notificationSchema = new mongoose.Schema({
   notificationData: {
     type: String,
   },
+  url: {
+    type: String,
+    trim:true,
+  },
   table: {
     type: [tableSchema],
     required: true // Ensure table is always provided
