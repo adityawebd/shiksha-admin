@@ -48,6 +48,8 @@ export default function Page({ params }) {
     const [blogTitle, setBlogTitle] = useState('');
     const [content, setContent] = useState('');
     // const navigate = useNavigate();
+    const [meta, setMeta] = useState("");
+    const [url, setUrl] = useState("");
   
 
     const titlee = decodeURIComponent(params.edit);
@@ -60,6 +62,8 @@ export default function Page({ params }) {
             if (result.success) {
                 setBlogTitle(result.data?.title);
                 setContent(result.data?.content);
+                setMeta(result.data?.meta);
+                setUrl(result.data?.url);
             }
         };
 
@@ -72,7 +76,9 @@ export default function Page({ params }) {
 
         const blogData = {
             blogTitle,
-            content
+            content,
+            meta,
+            url,
         };
 
         // console.log(blogData)
@@ -80,7 +86,8 @@ export default function Page({ params }) {
         if (titlee) {
             axios.put(`/api/blogs?title=${titlee}`, blogData)
                 .then(() => {
-                    // window.location.replace('/blogs')
+                    alert("Blog Data update Successfully")
+                    window.location.replace('/blogs')
                 })
                 .catch(error => {
                     console.error('There was an error updating the blog!', error);
@@ -100,6 +107,27 @@ export default function Page({ params }) {
         <div className='bg-white h-full p-4 '>
             <h1 className="h-1 mb-10  font-bold text-3xl items-center" >{'Edit Blog'}</h1>
             <form onSubmit={handleSubmit}>
+            <div>
+          <label>Meta tags</label>
+          <textarea
+            placeholder="Enter meta tags with html code"
+            value={meta}
+            onChange={(e) => setMeta(e.target.value)}
+            className="border border-gray-200 p-4 rounded-md shadow-sm w-full"
+            rows="2"
+          ></textarea>
+        </div>
+
+        <div>
+          <label> Your URL </label>
+          <input
+            placeholder="Enter your custom url"
+            type="text"
+            value={url}
+            onChange={(e) => setUrl(e.target.value)}
+            className='className="flex h-10 w-full rounded-md border border-black/30 bg-transparent px-3 py-2 text-sm placeholder:text-gray-600 focus:outline-none focus:ring-1 focus:ring-black/30 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"'
+          />
+        </div>
                 <div>
                     <label>Title:</label>
                     <input

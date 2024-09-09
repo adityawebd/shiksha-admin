@@ -9,6 +9,7 @@ export default function NotificationForm({ existingData }) {
   const [notification, setNotification] = useState({
     type: existingData?.type || "",
     image: existingData?.image || "",
+    url:existingData?.url || "",
     title: existingData?.title || "",
     message: existingData?.message || "",
     date: existingData?.date || "",
@@ -29,6 +30,7 @@ export default function NotificationForm({ existingData }) {
       setNotification({
         type: existingData.type || "normal",
         image: existingData.image || "",
+        url:existingData.url || "",
         title: existingData.title || "",
         message: existingData.message || "",
         date: existingData.date || "",
@@ -216,6 +218,19 @@ export default function NotificationForm({ existingData }) {
           type="text"
           name="image"
           value={notification.image}
+          onChange={handleChange}
+          className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm"
+        />
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium text-gray-700">
+          Custom url
+        </label>
+        <input
+          type="text"
+          name="url"
+          value={notification.url}
           onChange={handleChange}
           className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm"
         />
