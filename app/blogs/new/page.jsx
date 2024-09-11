@@ -17,7 +17,9 @@ export default function Page() {
   const [title, setTitle] = useState("");
   const [meta, setMeta] = useState("");
   const [url, setUrl] = useState("");
-  const [author, setAuthor] = useState("Admin");
+  const [author, setAuthor] = useState("sikshahelpline");
+  const [metatitle, setMetaTitle] = useState("");
+  const [metadesc, setMetadis] = useState("");
 
   const [content, setContent] = useState("");
 
@@ -71,6 +73,8 @@ export default function Page() {
     formData.append("meta", meta);
     formData.append("url", url);
     formData.append("author", author);
+    formData.append("metatitle", metatitle);
+    formData.append("metadesc", metadesc);
     if (images) {
       images.forEach((image, index) => {
         formData.append(`cardImage`, image); // Append each image file separately
@@ -140,15 +144,39 @@ export default function Page() {
       <div className="flex">
         <Sidebar />
         <div className=" w-10/12 ml-72 m-10 p-10">
-          <div className="mt-4">
-            <label>Meta tags</label>
-            <textarea
-              placeholder="Enter meta tags with html code"
-              value={meta}
-              onChange={(e) => setMeta(e.target.value)}
-              className="border border-gray-200 p-4 rounded-md shadow-sm w-full"
-              rows="2"
-            ></textarea>
+          <div className="border-1 border-black p-4 rounded-lg m-3">
+            <h2 className="h2">SEO Related</h2>
+            <div className="mt-4">
+              <label> Meta title </label>
+              <input
+                placeholder="Enter your meta title"
+                type="text"
+                value={metatitle}
+                onChange={(e) => setMetaTitle(e.target.value)}
+                className="border border-gray-200 p-4 rounded-md shadow-sm w-full h-10"
+              />
+            </div>
+
+            <div className="mt-4">
+              <label> Meta Discription</label>
+              <input
+                placeholder="Enter your meta discription"
+                type="text"
+                value={metadesc}
+                onChange={(e) => setMetadis(e.target.value)}
+                className="border border-gray-200 p-4 rounded-md shadow-sm w-full h-10"
+              />
+            </div>
+
+            <div className="mt-4">
+            <label> Your Author </label>
+            <input
+              placeholder="Enter your Author name"
+              type="text"
+              value={author}
+              onChange={(e) => setAuthor(e.target.value)}
+              className="border border-gray-200 p-4 rounded-md shadow-sm w-full h-10"
+            />
           </div>
 
           <div className="mt-4">
@@ -161,6 +189,11 @@ export default function Page() {
               className="border border-gray-200 p-4 rounded-md shadow-sm w-full h-10"
             />
           </div>
+
+          </div>
+
+
+          
 
           <div className="flex justify-center w-full">
             <h1 className="text-3xl font-bold ">New Blog</h1>

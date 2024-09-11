@@ -20,6 +20,19 @@ const BlogSchema = new mongoose.Schema({
         trim:true
     },
 
+
+    metatitle: {
+        type: String,
+        required: true,
+        trim:true
+    },
+
+    metadesc: {
+        type: String,
+        required: true,
+        trim:true
+    },
+
     content: {
         type: String,
         required: true
